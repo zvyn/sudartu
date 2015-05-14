@@ -2599,7 +2599,7 @@ var dart = [
 ["", "sudoku.dart", , Q, {
   "^": "",
   main: function() {
-    Q.Sudoku$(document.querySelector("#sudoku_container")).hideCells$1(42);
+    Q.Sudoku$(document.querySelector("#sudoku_container")).hideCells$1(81);
   },
   Sudoku: {
     "^": "Object;_size,_cageSize,_table,_hiddenCells",
@@ -2618,7 +2618,7 @@ var dart = [
       }
     },
     Sudoku$1: function(root) {
-      var t1, t2, rowValues, number, t3, t4, shift, cageShift, rowIndex, row, t5, valueIndex, cell, t6, list, index;
+      var t1, t2, rowValues, number, t3, globalShifts, cageShifts, element, t4, shift, cageShift, rowIndex, row, t5, valueIndex, cell, t6, list, index;
       t1 = this._table;
       J.get$children$x(root).add$1(0, t1);
       t2 = Array(9);
@@ -2631,12 +2631,27 @@ var dart = [
         rowValues[t3] = number;
       }
       C.JSArray_methods.shuffle$1(rowValues, $.get$Sudoku__random());
-      for (t3 = this._cageSize, t4 = J.getInterceptor$x(t1), shift = -1, cageShift = null, rowIndex = 0; rowIndex < t2; ++rowIndex) {
+      globalShifts = [];
+      t3 = this._cageSize;
+      cageShifts = Array(t3);
+      cageShifts.fixed$length = Array;
+      for (element = 0; element < t3; ++element) {
+        globalShifts.push(element);
+        cageShifts[element] = element * t3;
+      }
+      t4 = $.get$Sudoku__random();
+      C.JSArray_methods.shuffle$1(globalShifts, t4);
+      C.JSArray_methods.shuffle$1(cageShifts, t4);
+      for (t4 = J.getInterceptor$x(t1), shift = null, cageShift = null, rowIndex = 0; rowIndex < t2;) {
         row = t4.addRow$0(t1);
         row.id = "row-" + C.JSInt_methods.toString$0(rowIndex);
         if (C.JSInt_methods.$mod(rowIndex, t3) === 0) {
-          ++shift;
-          cageShift = 0;
+          if (0 >= globalShifts.length)
+            return H.ioore(globalShifts, 0);
+          shift = globalShifts.pop();
+          if (0 >= t3)
+            return H.ioore(cageShifts, 0);
+          cageShift = cageShifts[0];
         }
         for (t5 = J.getInterceptor$x(row), valueIndex = 0; valueIndex < 9; ++valueIndex) {
           cell = t5.addCell$0(row);
@@ -2645,16 +2660,17 @@ var dart = [
           list = cell.classList;
           list.contains(t6);
           list.add(t6);
+          if (typeof shift !== "number")
+            return H.iae(shift);
           if (typeof cageShift !== "number")
             return H.iae(cageShift);
-          index = C.JSInt_methods.$mod(valueIndex + shift + cageShift, t2);
-          if (index >= 9)
+          index = C.JSNumber_methods.$mod(valueIndex + shift + cageShift, t2);
+          if (index >>> 0 !== index || index >= 9)
             return H.ioore(rowValues, index);
           cell.textContent = J.toString$0(rowValues[index]);
         }
-        if (typeof cageShift !== "number")
-          return cageShift.$add();
-        cageShift += t3;
+        ++rowIndex;
+        cageShift = cageShifts[C.JSInt_methods.$mod(rowIndex, t3)];
       }
     },
     static: {Sudoku$: function(root) {
@@ -2775,6 +2791,7 @@ J.trim$0$s = function(receiver) {
 };
 C.JSArray_methods = J.JSArray.prototype;
 C.JSInt_methods = J.JSInt.prototype;
+C.JSNumber_methods = J.JSNumber.prototype;
 C.JSString_methods = J.JSString.prototype;
 C.NodeList_methods = W.NodeList.prototype;
 C.PlainJavaScriptObject_methods = J.PlainJavaScriptObject.prototype;
