@@ -1,0 +1,53 @@
+
+body {
+  background-color: #F8F8F8;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.2em;
+  margin: 15px;
+}
+
+h1, p {
+  color: #333;
+}
+
+#sudoku_container {
+  width: 378px;
+  position: relative;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+#sudoku_container > table {
+  border-collapse: collapse;
+  text-align: center;
+}
+
+td {
+  border: solid gray 1px;
+}
+
+td.col-3, td.col-6 {
+  border-left: solid black 2px;
+}
+
+#row-3 > td, #row-6 > td {
+  border-top: solid black 2px;
+}
+
+#sudoku_container > table > tbody > tr {
+  height: 42px;
+}
+#sudoku_container > table > tbody > tr > td {
+  width: 40px;
+}
+
+#sudoku_container > table > tbody > tr > td:hover {
+  background: lightgray;
+}
+
+.editable {
+  font-family: cursive;
+  font-weight: bold;
+}
